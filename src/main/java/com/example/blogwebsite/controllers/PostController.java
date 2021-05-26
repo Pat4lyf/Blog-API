@@ -36,9 +36,6 @@ public class PostController {
 
         if (optional.isPresent()) {
             List<Post> listOfPosts = postService.findAllPosts();
-//            for (Post post: listOfPosts) {
-//                post.getListOfComments()
-//            }
             return new ResponseEntity<>(listOfPosts, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);
@@ -65,13 +62,18 @@ public class PostController {
         Optional<Post> optionalPost = postService.getPostById(postId);
 
         if (optionalUser.isPresent() && optionalPost.isPresent()) {
-            postLike.setPost(optionalPost.get());
-            postLike.setUser(optionalUser.get());
+            Optional<PostLikes> optionalPostLikes = likeService.findPostLike(optionalPost.get(), optionalUser.get());
 
-            if (postLike.getUser().getUserId().equals(optionalUser.get().getUserId())) {
-                likeService.deleteLike(postLike);
+            if (optionalPostLikes.isPresent()) {
+                PostLikes postLikes = optionalPostLikes.get();
+
+                if (postLikes.getUser().getUserId().equals(optionalUser.get().getUserId()))
+                    likeService.deleteLike(postLikes);
                 return new ResponseEntity<>(HttpStatus.OK);
             }
+
+            postLike.setPost(optionalPost.get());
+            postLike.setUser(optionalUser.get());
 
             likeService.likePost(postLike);
             return new ResponseEntity<>(postLike, HttpStatus.OK);

@@ -5,18 +5,20 @@ import lombok.Data;
 import javax.persistence.*;
 import java.io.Serializable;
 
+@Entity(name = "favorites")
 @Data
-@Entity(name = "likes")
-public class PostLikes implements Serializable {
+public class Favorites implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long postLikeId;
+    private Long id;
 
-
-    @ManyToOne
+   @ManyToOne(fetch = FetchType.LAZY)
+   @JoinColumn(name = "post_id")
     private Post post;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
     private User user;
+
 }
