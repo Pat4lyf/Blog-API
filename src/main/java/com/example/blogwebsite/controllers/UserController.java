@@ -59,13 +59,13 @@ public class UserController {
 
         return optionalUser
                 .map(user -> new ResponseEntity<>(user, HttpStatus.OK))
-                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NO_CONTENT));
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
 
     }
 
 
     //to log in a user
-    @GetMapping("/login")
+    @PostMapping("/login")
     public ResponseEntity<UserDTO> logInUser(@Valid @RequestBody User user, HttpServletRequest request) {
         UserDTO response = userService.logInUser(user);
 
