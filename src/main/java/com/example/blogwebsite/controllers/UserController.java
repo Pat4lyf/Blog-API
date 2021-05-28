@@ -44,8 +44,7 @@ public class UserController {
 
     //to get all registered users
     @GetMapping
-    public ResponseEntity<List> getAllUsers(@RequestParam(value = "page", defaultValue = "1") Long page,
-                                            @RequestParam(value = "limit", defaultValue = "2") int Limit) {
+    public ResponseEntity<List> getAllUsers() {
         List<User> listOfUsers = userService.findAllUsers();
 
         return new ResponseEntity<>(listOfUsers, HttpStatus.OK);

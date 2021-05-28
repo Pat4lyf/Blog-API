@@ -99,7 +99,7 @@ public class UserServiceImplementation implements UserService {
             String deleteDate = user.getRemoveDate();
             int actionDelete = presentDate.compareTo(deleteDate);
             if(actionDelete > 0 || actionDelete == 0) {
-                System.out.println("user finally deleted");
+                System.out.println(user.getEmailAddress() +" is finally deleted");
                 user.setIsDelete(1);
                 userRepository.save(user);
             }
@@ -116,7 +116,7 @@ public class UserServiceImplementation implements UserService {
             User user1 = userRepository.getUserByEmailAddress(user.getEmailAddress()).get();
             if(user1.getUserId() == userId){
                 Calendar c = Calendar.getInstance();
-                c.add(Calendar.MINUTE, 6);
+                c.add(Calendar.MINUTE, 1);
                 String presentDate = DateFor.format(c.getTime());
                 user1.setPersonDeactivated(1);
                 user1.setRemoveDate(presentDate);

@@ -26,6 +26,7 @@ public class Post {
     private String body;
 
     @ManyToOne
+    @JsonIgnore
     private User user;
 
 

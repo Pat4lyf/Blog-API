@@ -26,6 +26,7 @@ public class Comment implements Serializable {
     private Post post;
 
     @ManyToOne
+    @JsonIgnore
     private User user;
 
 }
