@@ -14,20 +14,20 @@ import java.util.Optional;
 public class PostLikeServiceImplementation implements PostLikeService {
 
     @Autowired
-    PostLikeRepository likeRepository;
+    PostLikeRepository postLikeRepository;
 
     @Override
     public void likePost(PostLikes like) {
-        likeRepository.save(like);
+        postLikeRepository.save(like);
     }
 
     @Override
-    public void deleteLike(PostLikes like) {
-        likeRepository.delete(like);
+    public void deletePostLike(PostLikes like) {
+        postLikeRepository.delete(like);
     }
 
     @Override
     public Optional<PostLikes> findPostLike(Post post, User user) {
-        return likeRepository.findByPostAndUser(post, user);
+        return postLikeRepository.findByPostAndUser(post, user);
     }
 }

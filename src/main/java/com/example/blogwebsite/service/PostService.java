@@ -10,7 +10,7 @@ import java.util.Optional;
 public interface PostService {
     void addPost(User user, Post post);
 
-//    List<LikePosts> getAllPost(User user);
+    List<Post> getAllPostsByUser(User user);
 
     void updatePost(Post post);
 

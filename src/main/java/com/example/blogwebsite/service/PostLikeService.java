@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface PostLikeService {
     void likePost(PostLikes like);
-    void deleteLike(PostLikes like);
+    void deletePostLike(PostLikes like);
     Optional<PostLikes> findPostLike(Post post, User user);
 
 }

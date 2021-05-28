@@ -1,11 +1,11 @@
 package com.example.blogwebsite.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,10 +28,13 @@ public class Post {
     @ManyToOne
     private User user;
 
+
     @OneToMany
+    @JsonIgnore
     private List<Comment> listOfComments = new ArrayList<>();
 
     @OneToMany
+    @JsonIgnore
     private List<PostLikes> postLikes = new ArrayList<>();
 
 }

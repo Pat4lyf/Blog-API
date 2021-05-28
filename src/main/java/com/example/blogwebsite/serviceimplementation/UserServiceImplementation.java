@@ -1,16 +1,14 @@
 package com.example.blogwebsite.serviceimplementation;
 
-import com.example.blogwebsite.dto.ResponseDTO;
+import com.example.blogwebsite.dto.UserDTO;
 import com.example.blogwebsite.entities.User;
 import com.example.blogwebsite.repositories.UserRepository;
 import com.example.blogwebsite.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.security.InvalidParameterException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Service
 public class UserServiceImplementation implements UserService {
@@ -19,9 +17,9 @@ public class UserServiceImplementation implements UserService {
     UserRepository userRepository;
 
 
-    public ResponseDTO addUser(User user) {
+    public UserDTO addUser(User user) {
 
-        ResponseDTO response = new ResponseDTO();
+        UserDTO response = new UserDTO();
 
         try {
             List<String> domains = Arrays.asList("gmail.com", "yahoo.com", "hotmail.com");
@@ -64,10 +62,10 @@ public class UserServiceImplementation implements UserService {
      * @param user the user to be logged in
      * @return the response
      */
-    public ResponseDTO logInUser(User user) {
+    public UserDTO logInUser(User user) {
         Optional<User> userDb = userRepository.getUserByEmailAddressAndPassword
                 (user.getEmailAddress(), user.getPassword());
-        ResponseDTO response = new ResponseDTO();
+        UserDTO response = new UserDTO();
 
         if (userDb.isPresent()) {
             response.setStatus(true);
@@ -88,6 +86,69 @@ public class UserServiceImplementation implements UserService {
     @Override
     public Optional<User> getUserById(Long id) {
         return userRepository.findById(id);
+    }
+
+    @Override
+    public void deactivatedUserScheduler() {
+        List<User> users = userRepository.findAllByPersonDeactivated(1);
+        Date date = new Date();
+        SimpleDateFormat DateFor = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
+        System.out.println("scheduler working");
+        users.forEach(user -> {
+            String presentDate = DateFor.format(date);
+            String deleteDate = user.getRemoveDate();
+            int actionDelete = presentDate.compareTo(deleteDate);
+            if(actionDelete > 0 || actionDelete == 0) {
+                System.out.println("user finally deleted");
+                user.setIsDelete(1);
+                userRepository.save(user);
+            }
+        });
+    }
+
+
+    @Override
+    public boolean deleteUser(Long userId, User user) {
+        boolean status = false;
+        Date date = new Date();
+        SimpleDateFormat DateFor = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
+        try {
+            User user1 = userRepository.getUserByEmailAddress(user.getEmailAddress()).get();
+            if(user1.getUserId() == userId){
+                Calendar c = Calendar.getInstance();
+                c.add(Calendar.MINUTE, 6);
+                String presentDate = DateFor.format(c.getTime());
+                user1.setPersonDeactivated(1);
+                user1.setRemoveDate(presentDate);
+                userRepository.save(user1);
+                status = true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return status;
+    }
+
+
+    @Override
+    public String reverseDeleteActionUserAccount(User user, Long userId) {
+        String status = "Server Error";
+        try {
+            User user1 = userRepository.getUserByEmailAddress(user.getEmailAddress()).get();
+            if(user1.getUserId() != userId) status = "user not authorized";
+            else{
+                if(user1.getIsDelete() == 0){
+                    user1.setPersonDeactivated(0);
+                    userRepository.save(user1);
+                    status = "successfully reversed";
+                }else{
+                    status = "user not found";
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return status;
     }
 
 }

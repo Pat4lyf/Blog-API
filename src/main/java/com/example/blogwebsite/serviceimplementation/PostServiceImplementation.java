@@ -25,13 +25,18 @@ public class PostServiceImplementation implements PostService {
 
     /**
      * Method to save a post made by a user to the database
-     *
-     * @param user the user making the post
+     *  @param user the user making the post
      * @param post the post made
+     * @return
      */
     public void addPost(User user, Post post) {
         post.setUser(user);
         postRepository.save(post);
+    }
+
+    @Override
+    public List<Post> getAllPostsByUser(User user) {
+        return postRepository.findAllByUser(user);
     }
 
     /**
